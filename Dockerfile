@@ -8,13 +8,8 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory in the container
 WORKDIR /app
 
-# Install necessary system packages and PostgreSQL development libraries
 RUN apt-get update \
-    && apt-get install -y \
-    samtools wget unzip openjdk-17-jdk libgomp1 bcftools build-essential gcc g++ clang git cmake \
-    libpq-dev zlib1g-dev \
-    && pip install --no-cache-dir setuptools \
-    && apt-get clean
+&& apt-get install samtools wget unzip openjdk-17-jdk libgomp1 bcftools build-essential gcc g++ clang git cmake -y
 
 # Download and install GATK
 RUN wget https://github.com/broadinstitute/gatk/releases/download/4.5.0.0/gatk-4.5.0.0.zip \
@@ -35,20 +30,26 @@ RUN git clone https://github.com/genome/bam-readcount \
     && make \
     && make install
 
-# Copy the requirements.txt file to the container
+
+RUN apt-get update \
+    && apt-get install -y \
+    libpq-dev zlib1g-dev libbz2-dev \
+    && apt-get clean
+
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --no-build-isolation -r requirements.txt
+# Install any dependencies
+RUN pip install -r requirements.txt
 
-# Copy the rest of the application files
+# Copy the dependencies file to the working directory
 COPY . .
 
-# Create a media directory for file storage
 RUN mkdir -p media
 
-# Collect static files for Django
+# Collect static files
 RUN python manage.py collectstatic --noinput
 
 # Gunicorn configuration
 # CMD ["gunicorn", "--bind", "0.0.0.0:8001", "your_project_name.wsgi:application"]
+
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
