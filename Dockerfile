@@ -30,11 +30,28 @@ RUN git clone https://github.com/genome/bam-readcount \
     && make \
     && make install
 
+# Install Apache Arrow and Apache Parquet from source
+RUN git clone --branch master https://github.com/apache/arrow.git /arrow \
+    && cd /arrow \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make -j$(nproc) \
+    && make install
 
+RUN git clone --branch master https://github.com/apache/parquet-cpp.git /parquet-cpp \
+    && cd /parquet-cpp \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make -j$(nproc) \
+    && make install
+
+# Install system dependencies required for pyarrow and other Python packages
 RUN apt-get update \
     && apt-get install -y \
     libpq-dev zlib1g-dev libbz2-dev liblzma-dev \
-    libboost-dev libboost-system-dev libboost-filesystem-dev libarrow-dev libparquet-dev \
+    libboost-dev libboost-system-dev libboost-filesystem-dev \
     && apt-get clean
 
 COPY requirements.txt .
@@ -42,7 +59,7 @@ COPY requirements.txt .
 # Install any dependencies
 RUN pip install -r requirements.txt
 
-# Copy the dependencies file to the working directory
+# Copy the application code into the container
 COPY . .
 
 RUN mkdir -p media
@@ -50,7 +67,8 @@ RUN mkdir -p media
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Gunicorn configuration
-# CMD ["gunicorn", "--bind", "0.0.0.0:8001", "your_project_name.wsgi:application"]
+# Expose the application port (if needed, for example 8000)
+# EXPOSE 8000
 
+# CMD ["gunicorn", "--bind", "0.0.0.0:8001", "your_project_name.wsgi:application"]
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
