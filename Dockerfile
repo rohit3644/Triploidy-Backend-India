@@ -33,7 +33,7 @@ RUN git clone https://github.com/genome/bam-readcount \
 RUN apt-get update \
     && apt-get install -y \
     libpq-dev zlib1g-dev libbz2-dev liblzma-dev \
-    libboost-dev libboost-system-dev libboost-filesystem-dev build-dep python-psycopg2 \
+    libboost-dev libboost-system-dev libboost-filesystem-dev \
     && apt-get clean
 
 COPY requirements.txt .

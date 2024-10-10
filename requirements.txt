@@ -5,7 +5,7 @@ gunicorn
 pandas
 openpyxl
 django-cors-headers
-psycopg2-binary
+psycopg2
 snakemake
 PyVCF3
 matplotlib
