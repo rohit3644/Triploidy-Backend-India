@@ -1,0 +1,6 @@
+venv
+*.sqlite3
+triploidy/migrations/
+*.pyc
+/__pycache/
+db_data

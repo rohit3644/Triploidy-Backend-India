@@ -1,0 +1,114 @@
+version: "3.8"
+services:
+  api:
+    build: .
+    container_name: triploidy_backend
+    command: >
+      sh -c "python3 manage.py makemigrations triploidy &&
+             python3 manage.py migrate &&
+             gunicorn triploidy.wsgi:application -b 0.0.0.0:8001 --workers=5 --log-file /app/gunicorn.log"
+    expose:
+      - "8001"
+    volumes:
+      - static_volume:/app/static/
+      - media_volume:/app/media/
+      - .:/app
+      - /mnt/India/bioinfo/GUI_application/triploidy:/mnt/India/bioinfo/GUI_application/triploidy
+      - /mnt/India/bioinfo/GUI_application/parental_ploidy:/mnt/India/bioinfo/GUI_application/parental_ploidy
+      - /mnt/India/bioinfo/GUI_application/Parental_Identification:/mnt/India/bioinfo/GUI_application/Parental_Identification
+      - /mnt/Cal/R_n_D/bams:/mnt/Cal/R_n_D/bams
+      - /mnt/disk1/bams/:/mnt/disk1/bams/
+    environment:
+      - DB_HOST=pg_triploidy
+      - DB_NAME=triploidy
+      - DB_USER=postgres
+      - DB_PASS=1234
+      - DB_PORT=5432
+      - EMAIL_USER=rohit.kumar@progenesis.com
+      - EMAIL_PASSWORD=Goon@3644
+      - FRONTEND_PASSWORD_RESET_URL=http://122.184.82.132:6622/forget-password/{uid}/{token}/{email}
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://122.184.82.132:6622
+      - BASE_URL=http://122.184.82.132:6655
+      - DOMAIN=progenesis.com
+      - FRONTEND_EMAIL_VERIFY_URL=http://122.184.82.132:6622/verify-email/{uid}/{token}/{email}
+      - BAM_PATH=/mnt/Cal/R_n_D/bams,/mnt/disk1/bams/,/mnt/India/bioinfo/GUI_application/Parental_Identification/sample
+      - DISPLAY=:1
+      - CELERY_BROKER_URL=redis://triploidy_redis:6379
+      - CELERY_RESULT_BACKEND=redis://triploidy_redis:6379
+    depends_on:
+      - pg_triploidy
+      - triploidy_redis
+    restart: always
+  
+  pg_triploidy:
+    image: postgres:16.1-alpine3.18
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=triploidy
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    expose:
+    - "5432"
+    ports:
+      - "5433:5432"
+    
+    restart: always
+  
+  triploidy_celery_worker:
+    build: .
+    command: celery -A triploidy worker --loglevel=info --concurrency 3 -E
+    volumes:
+      - static_volume:/app/static/
+      - media_volume:/app/media/
+      - .:/app
+      - /mnt/India/bioinfo/GUI_application/triploidy:/mnt/India/bioinfo/GUI_application/triploidy
+      - /mnt/India/bioinfo/GUI_application/parental_ploidy:/mnt/India/bioinfo/GUI_application/parental_ploidy
+      - /mnt/India/bioinfo/GUI_application/Parental_Identification:/mnt/India/bioinfo/GUI_application/Parental_Identification
+      - /mnt/Cal/R_n_D/bams:/mnt/Cal/R_n_D/bams
+      - /mnt/disk1/bams/:/mnt/disk1/bams/
+    environment:
+      - DB_HOST=pg_triploidy
+      - DB_NAME=triploidy
+      - DB_USER=postgres
+      - DB_PASS=1234
+      - DB_PORT=5432
+      - EMAIL_USER=rohit.kumar@progenesis.com
+      - EMAIL_PASSWORD=Goon@3644
+      - FRONTEND_PASSWORD_RESET_URL=http://122.184.82.132:6622/forget-password/{uid}/{token}/{email}
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://122.184.82.132:6622
+      - BASE_URL=http://122.184.82.132:6655
+      - DOMAIN=progenesis.com
+      - FRONTEND_EMAIL_VERIFY_URL=http://122.184.82.132:6622/verify-email/{uid}/{token}/{email}
+      - BAM_PATH=/mnt/Cal/R_n_D/bams,/mnt/disk1/bams/,/mnt/India/bioinfo/GUI_application/Parental_Identification/sample
+      - DISPLAY=:1
+      - CELERY_BROKER_URL=redis://triploidy_redis:6379
+      - CELERY_RESULT_BACKEND=redis://triploidy_redis:6379
+    depends_on:
+      - api
+      - triploidy_redis
+    restart: always
+  
+  triploidy_redis:
+    image: redis:latest
+    expose:
+      - "6379"
+    restart: always
+  
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server_triploidy
+    ports:
+      - "6655:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/app/static/
+      - media_volume:/app/media/
+    depends_on:
+      - api
+    restart: always
+
+volumes:
+  db_data:
+  static_volume:
+  media_volume:
