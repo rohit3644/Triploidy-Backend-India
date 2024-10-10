@@ -8,10 +8,11 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory in the container
 WORKDIR /app
 
-# Install necessary system packages and Python build tools
+# Install necessary system packages and PostgreSQL development libraries
 RUN apt-get update \
     && apt-get install -y \
     samtools wget unzip openjdk-17-jdk libgomp1 bcftools build-essential gcc g++ clang git cmake \
+    libpq-dev \
     && pip install --no-cache-dir setuptools \
     && apt-get clean
 
