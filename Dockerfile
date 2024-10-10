@@ -8,12 +8,13 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory in the container
 WORKDIR /app
 
+# Install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     samtools wget unzip openjdk-17-jdk libgomp1 bcftools \
     build-essential gcc g++ clang git cmake libpq-dev \
     python3-dev zlib1g-dev libbz2-dev liblzma-dev libncurses5-dev \
-    libcurl4-openssl-dev \
+    libcurl4-openssl-dev libarrow-dev libparquet-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Download and install GATK
@@ -33,14 +34,20 @@ RUN git clone https://github.com/genome/bam-readcount \
     && cd build \
     && cmake .. \
     && make \
-    && make install
+    && make install \
+    && cd /app \
+    && rm -rf bam-readcount
 
+# Copy the requirements file to the working directory
 COPY requirements.txt .
 
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy the project files to the working directory
 COPY . .
 
+# Create the media directory
 RUN mkdir -p media
 
 # Collect static files
