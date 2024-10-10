@@ -31,7 +31,7 @@ RUN git clone https://github.com/genome/bam-readcount \
     && make install
 
 # Install Apache Arrow and Apache Parquet from source
-RUN git clone --branch master https://github.com/apache/arrow.git /arrow \
+RUN git clone --branch main https://github.com/apache/arrow.git /arrow \
     && cd /arrow \
     && mkdir build \
     && cd build \
@@ -39,7 +39,7 @@ RUN git clone --branch master https://github.com/apache/arrow.git /arrow \
     && make -j$(nproc) \
     && make install
 
-RUN git clone --branch master https://github.com/apache/parquet-cpp.git /parquet-cpp \
+RUN git clone --branch main https://github.com/apache/parquet-cpp.git /parquet-cpp \
     && cd /parquet-cpp \
     && mkdir build \
     && cd build \
