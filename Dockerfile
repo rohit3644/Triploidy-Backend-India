@@ -33,7 +33,7 @@ RUN git clone https://github.com/genome/bam-readcount \
 COPY requirements.txt .
 
 # Install any dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --no-build-isolation -r requirements.txt
 
 # Copy the dependencies file to the working directory
 COPY . .
