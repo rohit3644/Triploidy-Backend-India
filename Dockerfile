@@ -9,8 +9,12 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 RUN apt-get update \
-&& apt-get install samtools wget unzip openjdk-17-jdk libgomp1 bcftools build-essential gcc g++ clang git cmake libpq-dev python3-dev -y \
-&& rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends \
+    samtools wget unzip openjdk-17-jdk libgomp1 bcftools \
+    build-essential gcc g++ clang git cmake libpq-dev \
+    python3-dev zlib1g-dev libbz2-dev liblzma-dev libncurses5-dev \
+    libcurl4-openssl-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Download and install GATK
 RUN wget https://github.com/broadinstitute/gatk/releases/download/4.5.0.0/gatk-4.5.0.0.zip \
@@ -33,18 +37,11 @@ RUN git clone https://github.com/genome/bam-readcount \
 
 COPY requirements.txt .
 
-# Install any dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the dependencies file to the working directory
 COPY . .
 
 RUN mkdir -p media
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
-
-# Gunicorn configuration
-# CMD ["gunicorn", "--bind", "0.0.0.0:8001", "your_project_name.wsgi:application"]
-
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
