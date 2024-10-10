@@ -12,7 +12,7 @@ WORKDIR /app
 RUN apt-get update \
     && apt-get install -y \
     samtools wget unzip openjdk-17-jdk libgomp1 bcftools build-essential gcc g++ clang git cmake \
-    libpq-dev \
+    libpq-dev zlib1g-dev \
     && pip install --no-cache-dir setuptools \
     && apt-get clean
 
