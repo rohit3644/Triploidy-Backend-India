@@ -1,5 +1,7 @@
 Django
 djangorestframework
+pyarrow
+fastparquet
 ipython
 gunicorn
 pandas
@@ -13,4 +15,3 @@ matplotlib
 numpy
 celery
 redis
-pyarrow

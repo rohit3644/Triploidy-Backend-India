@@ -30,24 +30,6 @@ RUN git clone https://github.com/genome/bam-readcount \
     && make \
     && make install
 
-# Install Apache Arrow and Apache Parquet from source
-RUN git clone --branch main https://github.com/apache/arrow.git /arrow \
-    && cd /arrow/cpp \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-    && make -j$(nproc) \
-    && make install
-
-RUN git clone --branch master https://github.com/apache/parquet-cpp.git /parquet-cpp \
-    && cd /parquet-cpp \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-    && make -j$(nproc) \
-    && make install
-
-# Install system dependencies required for pyarrow and other Python packages
 RUN apt-get update \
     && apt-get install -y \
     libpq-dev zlib1g-dev libbz2-dev liblzma-dev \
