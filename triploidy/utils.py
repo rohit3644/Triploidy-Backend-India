@@ -42,7 +42,7 @@ async def run_command(command,log_file_path):
 @app.task
 def kill_running_process():
     try:
-        command = ['bash','/home/progenesis/mnt/India/bioinfo/GUI_application/triploidy/new_pipeline/kill_check/kill.sh']
+        command = ['bash','/root/mnt/India/bioinfo/GUI_application/triploidy/new_pipeline/kill_check/kill.sh']
         log_file_path = f'/app/media/output/process_kill.log'
         return_code = asyncio.run(run_command(command,log_file_path))
 
@@ -62,7 +62,7 @@ def process_upload_sample(serializer,file_url, data_list):
             if (isinstance(rec.get('Gender'),str) and rec.get('Gender') and rec.get('Gender').lower() not in ['male','female']) or (not isinstance(rec.get('Gender'),str)):
                 rec['Gender'] = '-'
 
-        file_path = '/home/progenesis/mnt/India/bioinfo/GUI_application/triploidy/new_pipeline/scripts/sample_list.txt'
+        file_path = '/root/mnt/India/bioinfo/GUI_application/triploidy/new_pipeline/scripts/sample_list.txt'
         # Open the file in write mode, which clears its content
         with open(file_path, 'w') as file:
             # Truncate the file to remove existing content
@@ -89,7 +89,7 @@ def process_upload_sample(serializer,file_url, data_list):
             SampleHistory.objects.bulk_create(bulk_create)
 
         # Construct the full command to change directory and run the Python file
-        command = ['bash', '/home/progenesis/mnt/India/bioinfo/GUI_application/triploidy/new_pipeline/snakemake.sh']
+        command = ['bash', '/root/mnt/India/bioinfo/GUI_application/triploidy/new_pipeline/snakemake.sh']
         log_file_path = f'/app/media/output/{serializer.get("bam_directory_path")}.log'
         # # Use subprocess.Popen to run the command with pipes for stdout and stderr
         # process = subprocess.call(command)
@@ -112,7 +112,7 @@ def process_upload_sample_parental(serializer,file_url, data_list):
     try:
         ParentalStatusHandling.objects.create(run_id=serializer.get('bam_directory_path'),message='Processing',file_url=file_url)
 
-        file_path = '/home/progenesis/mnt/India/bioinfo/GUI_application/Parental_Identification/scripts/parental_identification.txt'
+        file_path = '/root/mnt/India/bioinfo/GUI_application/Parental_Identification/scripts/parental_identification.txt'
         # Open the file in write mode, which clears its content
         with open(file_path, 'w') as file:
             # Truncate the file to remove existing content
@@ -139,7 +139,7 @@ def process_upload_sample_parental(serializer,file_url, data_list):
             ParentalSampleHistory.objects.bulk_create(bulk_create)
 
         # Construct the full command to change directory and run the Python file
-        command = ['bash', '/home/progenesis/mnt/India/bioinfo/GUI_application/Parental_Identification/paternity_matching.sh']
+        command = ['bash', '/root/mnt/India/bioinfo/GUI_application/Parental_Identification/paternity_matching.sh']
         log_file_path = f'/app/media/parental_identification/output/{serializer.get("bam_directory_path")}.log'
         # # Use subprocess.Popen to run the command with pipes for stdout and stderr
         # process = subprocess.call(command)
@@ -162,7 +162,7 @@ def process_upload_sample_parental_ploidy(serializer,file_url, data_list):
     try:
         ParentalPloidyStatusHandling.objects.create(run_id=serializer.get('bam_directory_path'),message='Processing',file_url=file_url)
 
-        file_path = '/home/progenesis/mnt/India/bioinfo/GUI_application/parental_ploidy/scripts/sample_list.txt'
+        file_path = '/root/mnt/India/bioinfo/GUI_application/parental_ploidy/scripts/sample_list.txt'
         # Open the file in write mode, which clears its content
         with open(file_path, 'w') as file:
             # Truncate the file to remove existing content
@@ -189,7 +189,7 @@ def process_upload_sample_parental_ploidy(serializer,file_url, data_list):
             ParentalPloidySampleHistory.objects.bulk_create(bulk_create)
 
         # Construct the full command to change directory and run the Python file
-        command = ['bash', '/home/progenesis/mnt/India/bioinfo/GUI_application/parental_ploidy/parental+triploid.sh']
+        command = ['bash', '/root/mnt/India/bioinfo/GUI_application/parental_ploidy/parental+triploid.sh']
         log_file_path = f'/app/media/parental_ploidy/output/{serializer.get("bam_directory_path")}.log'
         # # Use subprocess.Popen to run the command with pipes for stdout and stderr
         # process = subprocess.call(command)
