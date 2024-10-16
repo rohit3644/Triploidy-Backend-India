@@ -17,7 +17,7 @@ services:
       - /root/mnt/India/bioinfo/GUI_application/parental_ploidy:/root/mnt/India/bioinfo/GUI_application/parental_ploidy
       - /root/mnt/India/bioinfo/GUI_application/Parental_Identification:/root/mnt/India/bioinfo/GUI_application/Parental_Identification
       - /root/mnt/Cal/R_n_D/bams:/root/mnt/Cal/R_n_D/bams
-      - /root/mnt/disk1/bams/:/root/mnt/disk1/bams/
+      - /mnt/disk1/bams/:/mnt/disk1/bams/
     environment:
       - DB_HOST=pg_triploidy
       - DB_NAME=triploidy
@@ -31,7 +31,7 @@ services:
       - BASE_URL=http://122.184.82.132:6655
       - DOMAIN=progenesis.com
       - FRONTEND_EMAIL_VERIFY_URL=http://122.184.82.132:6622/verify-email/{uid}/{token}/{email}
-      - BAM_PATH=/root/mnt/Cal/R_n_D/bams,/root/mnt/disk1/bams/,/root/mnt/India/bioinfo/GUI_application/Parental_Identification/sample
+      - BAM_PATH=/root/mnt/Cal/R_n_D/bams,/mnt/disk1/bams/,/root/mnt/India/bioinfo/GUI_application/Parental_Identification/sample
       - DISPLAY=:1
       - CELERY_BROKER_URL=redis://triploidy_redis:6379
       - CELERY_RESULT_BACKEND=redis://triploidy_redis:6379
@@ -66,7 +66,7 @@ services:
       - /root/mnt/India/bioinfo/GUI_application/parental_ploidy:/root/mnt/India/bioinfo/GUI_application/parental_ploidy
       - /root/mnt/India/bioinfo/GUI_application/Parental_Identification:/root/mnt/India/bioinfo/GUI_application/Parental_Identification
       - /root/mnt/Cal/R_n_D/bams:/root/mnt/Cal/R_n_D/bams
-      - /root/mnt/disk1/bams/:/root/mnt/disk1/bams/
+      - /mnt/disk1/bams/:/mnt/disk1/bams/
     environment:
       - DB_HOST=pg_triploidy
       - DB_NAME=triploidy
@@ -80,7 +80,7 @@ services:
       - BASE_URL=http://122.184.82.132:6655
       - DOMAIN=progenesis.com
       - FRONTEND_EMAIL_VERIFY_URL=http://122.184.82.132:6622/verify-email/{uid}/{token}/{email}
-      - BAM_PATH=/root/mnt/Cal/R_n_D/bams,/root/mnt/disk1/bams/,/root/mnt/India/bioinfo/GUI_application/Parental_Identification/sample
+      - BAM_PATH=/root/mnt/Cal/R_n_D/bams,/mnt/disk1/bams/,/root/mnt/India/bioinfo/GUI_application/Parental_Identification/sample
       - DISPLAY=:1
       - CELERY_BROKER_URL=redis://triploidy_redis:6379
       - CELERY_RESULT_BACKEND=redis://triploidy_redis:6379
